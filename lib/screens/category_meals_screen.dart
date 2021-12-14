@@ -27,6 +27,7 @@ class CategoryMealsScreen extends StatelessWidget {
         itemBuilder: (ctx, index) {
           final Meal currentMeal = categoryMeals[index];
           return MealItem(
+              id: currentMeal.id,
               title: currentMeal.title,
               imageUrl: currentMeal.imageUrl,
               duration: currentMeal.duration,
