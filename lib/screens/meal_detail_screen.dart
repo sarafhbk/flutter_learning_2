@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import '../font_family.dart';
 import '../models/meal.dart';
-import '../dummy_data.dart';
 
 class MealDetail extends StatelessWidget {
   static const routeName = '/meal-detail';
-  const MealDetail({Key? key}) : super(key: key);
+  final Function toggleFav;
+  final List<Meal> availableMeals;
+  final Function(String id) isFav;
+  const MealDetail(
+      {Key? key,
+      required this.availableMeals,
+      required this.toggleFav,
+      required this.isFav})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final mealId = ModalRoute.of(context)?.settings.arguments as String;
     final Meal selectedMeal =
-        dummyMeals.firstWhere((meal) => meal.id == mealId);
+        availableMeals.firstWhere((meal) => meal.id == mealId);
 
     Widget renderSubHeading(BuildContext ctx, String text) {
       return Container(
@@ -93,10 +100,10 @@ class MealDetail extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pop(mealId);
+          toggleFav(mealId);
         },
-        child: const Icon(
-          Icons.delete,
+        child: Icon(
+          isFav(mealId) as bool ? Icons.star : Icons.star_border,
         ),
       ),
     );

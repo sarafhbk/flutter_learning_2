@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import '../models/meal.dart';
 import 'package:flutter_learning_2/widgets/meal_item.dart';
-import '../dummy_data.dart';
 
 class CategoryMealsScreen extends StatefulWidget {
   static const routeName = '/category-meals';
-  const CategoryMealsScreen({Key? key}) : super(key: key);
+  final List<Meal> availableMeals;
+
+  const CategoryMealsScreen({Key? key, required this.availableMeals})
+      : super(key: key);
 
   @override
   State<CategoryMealsScreen> createState() => _CategoryMealsScreenState();
@@ -13,7 +15,7 @@ class CategoryMealsScreen extends StatefulWidget {
 
 class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
   String categoryTitle = '';
-  late List<Meal> displayedMeals;
+  List<Meal> displayedMeals = [];
 
   @override
   void didChangeDependencies() {
@@ -23,17 +25,18 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
     categoryTitle = routerArgs['title'] as String;
     final categoryId = routerArgs['id'];
 
-    displayedMeals = dummyMeals.where((meal) {
+    displayedMeals = widget.availableMeals.where((meal) {
       return meal.categories.contains(categoryId);
     }).toList();
+
     super.didChangeDependencies();
   }
 
-  void _removeMeal(String mealIdToDelete) {
-    setState(() {
-      displayedMeals.removeWhere((element) => element.id == mealIdToDelete);
-    });
-  }
+  // void _removeMeal(String mealIdToDelete) {
+  //   setState(() {
+  //     displayedMeals.removeWhere((element) => element.id == mealIdToDelete);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,6 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
             duration: currentMeal.duration,
             complexity: currentMeal.complexity,
             affordability: currentMeal.affordability,
-            removeItem: _removeMeal,
           );
         },
         itemCount: displayedMeals.length,
